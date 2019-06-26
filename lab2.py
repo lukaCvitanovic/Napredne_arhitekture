@@ -9,7 +9,7 @@ def generateData(kb):
     size = kb * 1024
     numbers = list()
     while sys.getsizeof(numbers) < size :
-        numbers.append(random.randint(0, 101))
+        numbers.append(0)
     return numbers
 
 def calculateAverage(numbers, offset):
@@ -18,6 +18,11 @@ def calculateAverage(numbers, offset):
         sum += numbers[i]
     print(offset)
     return sum/len(numbers)
+
+def calculate(numbers, size, steps):
+    for i in range(0, steps):
+        a = (i*16) % len(numbers)
+        numbers[a] += 1
 
 def createHistogram(data):
     times = list()
@@ -43,15 +48,15 @@ def doWork():
         numbers = generateData(Size)
         print("Size of numbers: " + str(sys.getsizeof(numbers)/1024) + "in KB")
         print("Calculating...")
-        start = time.clock()
+        start = time.perf_counter_ns()
         k=0
-        for k in range(0,(16-i)):
-            calculateAverage(numbers, k)
+        #for k in range(0,(16-i)):
+        calculate(numbers, Size, 2*1024*1024)
         #print(k)
         #calculateAverage(numbers, k)
-        end = time.clock()
+        end = time.perf_counter_ns()
         size = Size
-        times.append({"time":(end-start), "size":size})
+        times.append({"time":(end-start)/1000000000, "size":size})
         Size *= 2
 
     print(times)
